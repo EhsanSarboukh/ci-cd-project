@@ -50,7 +50,7 @@ jobs:
           sleep 3
           curl -f http://localhost:8000/health
 
-deploy:
+  deploy:
     runs-on: self-hosted
     needs: build
 
