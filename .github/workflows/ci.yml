@@ -49,3 +49,32 @@ jobs:
           uvicorn app.main:app --host 0.0.0.0 --port 8000 &
           sleep 3
           curl -f http://localhost:8000/health
+
+deploy:
+    runs-on: self-hosted
+    needs: build
+
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install dependencies
+        run: |
+          cd /home/ehsan/ci-cd-project
+          git pull origin main
+          ./venv/bin/pip install -r requirements.txt
+
+      - name: Restart service
+        run: |
+          sudo systemctl restart student-portal
+
+      - name: Health check
+        run: |
+          sleep 3
+          curl -f http://localhost:8000/health
