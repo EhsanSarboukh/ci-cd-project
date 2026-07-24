@@ -74,7 +74,7 @@ jobs:
         run: |
           sudo systemctl restart student-portal
 
-      - name: Health check
+      - name: Health check via nginx
         run: |
           sleep 3
-          curl -f http://localhost:8000/health
+          curl -f http://localhost/health
